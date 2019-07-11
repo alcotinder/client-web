@@ -11,9 +11,10 @@ const SignUp = () => {
 
   const handleSubmit = () => {
     console.log(redirect)
-    setRedirect(true);
+    
     console.log(login, password, email);
     if (password === confirmPassword) {
+      setRedirect(true);
       fetch(url , {
         method: 'POST',
         body: JSON.stringify({

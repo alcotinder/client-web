@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { Redirect } from 'react-router-dom'
 
 const SignIn = () => {
   const [login, setlogin] = useState('');
   const [password, setpassword] = useState('');
+  const [redirect, setRedirect] = useState(false)
 
   const handleButtonClick = () => {
     console.log(login, password);
@@ -17,10 +19,17 @@ const SignIn = () => {
       }
     })
     .then(res => res.json())
-    .then(res => console.log(JSON.stringify(res)))
+    .then(res => {
+      console.log(JSON.stringify(res))
+      if (res) {
+        setRedirect(true)
+      }
+    })
     .catch(e => console.error('Error:', e));
   }
-
+  if (redirect) {
+    return <Redirect to="/"/>
+  }
 
   return (
     <div>
