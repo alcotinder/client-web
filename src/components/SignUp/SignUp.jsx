@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { signUpReq } from '../../helpers/apiHelper';
+import { useInput } from '../../helpers/customHooks'
 
 const SignUp = () => {
 	const [redirect, setRedirect] = useState(false);
-	const [login, setLogin] = useState('');
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setCongirmPassword] = useState('');
-	const [email, setEmail] = useState('');
+	const { value:login, bind:bindLogin } = useInput('');
+    const { value:password, bind:bindPassword } = useInput('');
+    const { value:confirmPassword, bind:bindConfirmPassword } = useInput('');
+    const { value:email, bind:bindEmail } = useInput('');
 	const [error, setError] = useState('');
 
 	const handleSubmit = async() => {
@@ -35,40 +36,19 @@ const SignUp = () => {
 		<div>
 			<p>
 				<label>Login: </label>
-				<input required
-					onChange={({ target }) =>
-						setLogin(target.value)
-					}
-					value={login}
-				/>
+				<input required {...bindLogin}/>
 			</p>
 			<p>
 				<label>Email: </label>
-				<input type='email' required
-					onChange={({ target }) =>
-						setEmail(target.value)
-					}
-					value={email}
-				/>
+				<input required {...bindEmail}/>
 			</p>
 			<p>
 				<label>Password: </label>
-				<input type='password' required
-					onChange={({ target }) =>
-						setPassword(target.value)
-					}
-					value={password}
-				/>
+				<input required type='password' {...bindPassword}/>
 			</p>
 			<p>
 				<label>Confirm Password: </label>
-				<input type='password' required
-					onChange={
-						({ target }) =>
-							setCongirmPassword(target.value)
-					}
-					value={confirmPassword}
-				/>
+				<input required type='password' {...bindConfirmPassword}/>
 			</p>
 			<p>
 				{

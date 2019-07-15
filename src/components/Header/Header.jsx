@@ -9,8 +9,10 @@ const Header = () => {
 			<ul>
 				<li><Link to="/profile">Profile</Link></li>
 				<li><Link to='/'>Home</Link></li>
+				{/* temporary links */}
 				<li><Link to='/signin'>Sign In</Link></li>
 				<li><Link to='/signup'>Sign Up</Link></li>
+				<li><Link to='/addinfo'>Add Info</Link></li>
 				<li><a href='/' onClick={logOut}>Logout</a></li>
 			</ul>
 		</div>

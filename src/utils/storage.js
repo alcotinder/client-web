@@ -25,7 +25,7 @@ const setInStorage = (key, obj) => {
 	}
 };
 
-const removeFromStorage = key => {
+const clearStorage = key => {
 	if (!key) {
 		console.error('Error: Key is missing');
 	}
@@ -40,5 +40,5 @@ const removeFromStorage = key => {
 export {
 	getFromStorage,
 	setInStorage,
-	removeFromStorage,
+	clearStorage,
 };

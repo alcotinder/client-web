@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { getState } from '../../context';
 import {
 	setInStorage,
 } from '../../utils/storage';
 
 import { signInReq } from '../../helpers/apiHelper';
+import { useInput } from '../../helpers/customHooks'
 
 const SignIn = () => {
-	const [login, setlogin] = useState('');
-	const [password, setpassword] = useState('');
+	const { value:login, bind:bindLogin } = useInput('');
+    const { value:password, bind:bindPassword } = useInput('');
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState('');
-
-	const { dispatch } = getState();
 
 	const handleButtonClick = async() => {
 		try {
@@ -25,7 +23,6 @@ const SignIn = () => {
 					refreshToken,
 					expiresIn,
 				});
-				dispatch({ type: 'LOG_IN', payload: result });
 				setRedirect(true);
 			} else {
 				setError(result.message);
@@ -42,21 +39,11 @@ const SignIn = () => {
 		<div>
 			<p>
 				<label>Login: </label>
-				<input
-					onChange={({ target }) =>
-						setlogin(target.value)
-					}
-					value={login}
-				/>
+				<input {...bindLogin} />
 			</p>
 			<p>
 				<label>Password: </label>
-				<input
-					onChange={({ target }) =>
-						setpassword(target.value)
-					}
-					value={password}
-				/>
+				<input type='password' {...bindPassword} />
 			</p>
 			<p>
 				{

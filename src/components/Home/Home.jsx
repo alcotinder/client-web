@@ -1,9 +1,9 @@
 import React, {  useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getState } from '../../context';
+import { getState } from '../../utils/context';
 import { getFromStorage } from '../../utils/storage';
-import { protectedReq } from '../../helpers/apiHelper';
+import { fetchData } from '../../helpers/apiHelper';
 import { refresh } from '../../services/token.service';
 
 const Home = () => {
@@ -21,13 +21,6 @@ const Home = () => {
 
 			if (expiresIn > +new Date()) {
 				setIsLoading(true);
-				const fetchData = async accessToken => {
-					const result = await protectedReq(accessToken);
-
-					if (result.success) {
-						dispatch({ type: 'ADD_INFO', payload: result });
-					}
-				};
 				fetchData(accessToken);
 				setIsLoading(false);
 			} else {

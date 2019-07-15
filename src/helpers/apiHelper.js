@@ -38,6 +38,20 @@ const signUpReq = async(email, login, password, confirmPassword) => {
 	return body;
 };
 
+const addInfo = async (formData) => {
+	const endpoint = '/addinfo'
+	const url = `${API_URL}${endpoint}`
+	const result = await fetch(url, {
+		method: 'POST',
+		body: formData,
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		},
+	})
+	const body = await result.json()
+	return body
+}
+
 const refreshTokensReq = async refreshToken => {
 	const endpoint = '/api/auth/refresh-token';
 	const url = `${API_URL}${endpoint}`;
@@ -52,8 +66,7 @@ const refreshTokensReq = async refreshToken => {
 	return body;
 };
 
-const protectedReq = async accessToken => {
-	const endpoint = '/protected';
+const protectedReq = async (accessToken, endpoint) => {
 	const url = `${API_URL}${endpoint}`;
 	const result = await fetch(url, {
 		method: 'GET',
@@ -66,10 +79,20 @@ const protectedReq = async accessToken => {
 	return body;
 };
 
+const fetchData = async accessToken => {
+	const result = await protectedReq(accessToken);
+
+	if (result.success) {
+		dispatch({ type: 'ADD_INFO', payload: result });
+	}
+};
+
 
 export {
 	signInReq,
 	signUpReq,
 	refreshTokensReq,
 	protectedReq,
+	addInfo,
+	fetchData
 };

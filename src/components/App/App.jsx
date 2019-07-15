@@ -12,8 +12,8 @@ import SignUp from '../SignUp/SignUp';
 import Profile from '../Profile/Profile';
 import AddInfo from '../AddInfo/AddInfo';
 
-import { UserContext } from '../../context';
-import { infoReducer } from '../../reducers';
+import { UserContext } from '../../utils/context';
+import { infoReducer } from '../../helpers/reducers';
 
 const inititalState = {
 	protected: '',
