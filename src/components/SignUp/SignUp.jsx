@@ -29,7 +29,7 @@ const SignUp = () => {
 		}
 	};
 	if (redirect) {
-		return <Redirect to='/signin'/>;
+		return <Redirect to='/addinfo'/>;
 	}
 
 	return (

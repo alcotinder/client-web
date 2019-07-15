@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect, Fragment } from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -28,13 +28,16 @@ const App = () => {
 	return (
 		<UserContext.Provider value={{ state, dispatch }}>
 			<Router>
-				<Header />
+				{/* */}
 				<Switch>
-					<Route path='/' exact component={Home} />
-					<Route path='/profile' component={Profile} />
 					<Route path='/signin' component={SignIn} />
 					<Route path='/signup' component={SignUp} />
-					<Route path='/addinfo' component={AddInfo} />
+					<Fragment>
+						<Header /> 
+						<Route path='/' exact component={Home} />
+						<Route path='/profile' component={Profile} />
+						<Route path='/addinfo' component={AddInfo} />
+					</Fragment>
 				</Switch>
 			</Router>
 		</UserContext.Provider>

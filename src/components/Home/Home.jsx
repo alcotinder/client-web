@@ -1,5 +1,5 @@
 import React, {  useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { getState } from '../../utils/context';
 import { getFromStorage } from '../../utils/storage';
@@ -9,6 +9,7 @@ import { refresh } from '../../services/token.service';
 const Home = () => {
 	const { dispatch } = getState();
 	const [isLoading, setIsLoading] = useState(false);
+	const [redirect, setRedirect] = useState(false);
 
 	useEffect(() => {
 		const tokensfromStorage = getFromStorage('tokens');
@@ -26,21 +27,25 @@ const Home = () => {
 			} else {
 				refresh(refreshToken);
 			}
+		} else {
+			setRedirect(true)
 		}
 
 	}, []);
+
+	if (redirect) {
+		return <Redirect to='/signin'/>
+	} 
+
 	return (
 		<div>
 			{
 				isLoading ?
-					<p>Loading...</p> :
-					null
+				<p>Loading...</p> :
+				null
 			}
 			<ul>
 				<h1>Home</h1>
-			</ul>
-			<ul>
-				<Link to='/addinfo'>Add info</Link>
 			</ul>
 		</div>
 	);

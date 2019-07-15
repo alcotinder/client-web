@@ -32,7 +32,7 @@ const SignIn = () => {
 		}
 	};
 	if (redirect) {
-		return <Redirect to='/profile'/>;
+		return <Redirect to='/'/>;
 	}
 
 	return (

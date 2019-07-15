@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { Redirect } from 'react-router-dom';
 import { useInput } from '../../helpers/customHooks'
 import { addInfo } from '../../helpers/apiHelper'
 
@@ -17,6 +18,7 @@ const AddInfo = () => {
         const result = await addInfo(formData)
         console.log(result)     
         // Add info with dispatch to global state   
+        if (result.success) return <Redirect to='/signin'/>
     }
 
     return (
