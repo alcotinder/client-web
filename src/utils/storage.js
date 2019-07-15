@@ -25,7 +25,20 @@ const setInStorage = (key, obj) => {
 	}
 };
 
+const removeFromStorage = key => {
+	if (!key) {
+		console.error('Error: Key is missing');
+	}
+	try {
+		localStorage.setItem(key);
+		return null;
+	} catch (err) {
+		console.error(err);
+	}
+}
+
 export {
 	getFromStorage,
 	setInStorage,
+	removeFromStorage,
 };
