@@ -9,7 +9,7 @@ import Header from '../Header/Header';
 import Home from '../Home/Home';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
-import Profile from '../Profile/ProfilePage';
+import Profile from '../Profile/Profile';
 import AddInfo from '../AddInfo/AddInfo';
 
 import { UserContext } from '../../context';

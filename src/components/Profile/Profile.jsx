@@ -1,16 +1,20 @@
-import React from 'react'
-import {UserContext} from '../../context';
+import React from 'react';
+import { getFromStorage } from '../../utils/storage';
 
 const Profile = () => {
-  return (
-    <UserContext>
-      {state => (
-        <p>
-          {state.name}
-        </p>
-      )}
-    </UserContext>
-  )
-}
+	const { accessToken, expiresIn } = getFromStorage('tokens');
+	return (
+		<div>
+			<p>
+				{
+					accessToken && +expiresIn > Date.now() ?
+						'Online' :
+						'Offline'
+				}
+			</p>
+		</div>
 
-export default Profile
+	);
+};
+
+export default Profile;
