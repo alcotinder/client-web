@@ -6,8 +6,10 @@ import {
 
 import { signInReq } from '../../helpers/apiHelper';
 import { useInput } from '../../helpers/customHooks';
+import { getState } from '../../utils/context';
 
 const SignIn = () => {
+	const { state, dispatch }  = getState();
 	const { value:login, bind:bindLogin } = useInput('');
 	const { value:password, bind:bindPassword } = useInput('');
 	const [redirect, setRedirect] = useState(false);
@@ -15,6 +17,7 @@ const SignIn = () => {
 
 	const handleButtonClick = async() => {
 		try {
+			dispatch({type: 'ADD_LOGIN', payload: login })
 			const result = await signInReq(login, password);
 			if (result.success) {
 				const { accessToken, refreshToken, expiresIn } = result;
