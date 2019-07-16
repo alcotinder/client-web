@@ -38,7 +38,7 @@ const signUpReq = async(email, login, password, confirmPassword) => {
 	return body;
 };
 
-const addPhoto = async (formData, accessToken) => {
+const addPhotoReq = async (formData, accessToken) => {
 	const endpoint = '/users/avatars/upload';
 	const url = `${API_URL}${endpoint}`;
 	const result = await fetch(url, {
@@ -53,7 +53,7 @@ const addPhoto = async (formData, accessToken) => {
 	return body;
 };
 
-const addInfo = async userInfo => {
+const addInfoReq = async userInfo => {
 	const endpoint ='';
 	const url = `${API_URL}${endpoint}`;
 	const result = await fetch(url, {
@@ -65,6 +65,22 @@ const addInfo = async userInfo => {
 	});
 	const body = await result.json();
 	return body
+}
+
+const getPhotoReq = async (login) => {
+	const endpoint ='';
+	const url = new URL(`${API_URL}${endpoint}`)
+	url.searchParams.append('login', login)
+	const result = await fetch(url);
+	console.log(result)
+}
+
+const getInfoReq = async (accessToken,login) => {
+	const endpoint ='';
+	const url = new URL(`${API_URL}${endpoint}`)
+	url.searchParams.append('login', login)
+	const result = await protectedReq(accessToken, url);
+	return result;	
 }
 
 const refreshTokensReq = async refreshToken => {
@@ -81,8 +97,7 @@ const refreshTokensReq = async refreshToken => {
 	return body;
 };
 
-const protectedReq = async (accessToken, endpoint) => {
-	const url = `https://9e477399-5048-4707-9c6a-69c29a777a22.mock.pstmn.io/home `;
+const protectedReq = async (accessToken, url) => {
 	const result = await fetch(url, {
 		method: 'GET',
 		headers: {
@@ -94,14 +109,11 @@ const protectedReq = async (accessToken, endpoint) => {
 	return body;
 };
 
-const fetchData = async (accessToken, dispatch, type) => {
-	const result = await protectedReq(accessToken);
-	if (result.success) {
-		dispatch({ type: `${type}`, payload: result.bio });
-		console.log(result)
-	} else {
-		return result
-	}
+const fetchHomePage = async accessToken => {
+	const endpoint = ''
+	const url = `${API_URL}${endpoint}`
+	const result = await protectedReq(accessToken, url);
+	return result;
 };
 
 
@@ -110,7 +122,9 @@ export {
 	signUpReq,
 	refreshTokensReq,
 	protectedReq,
-	addInfo,
-	addPhoto,
-	fetchData
+	addInfoReq,
+	addPhotoReq,
+	fetchHomePage,
+	getInfoReq,
+	getPhotoReq,
 };

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useInput } from '../../helpers/customHooks';
-import { addInfo, addPhoto } from '../../helpers/apiHelper';
+import { addInfoReq, addPhotoReq } from '../../helpers/apiHelper';
 import { validateInfo } from '../../helpers/validation'
 import { getFromStorage } from '../../utils/storage'
 
@@ -26,8 +26,8 @@ const AddInfo = () => {
 		const userInfo = {name, lastName, city, drinks}
 		if (validateInfo(userInfo)) {
 			const results = await Promise.all([
-				addInfo(userInfo),
-				addPhoto(formData, accessToken)	
+				addInfoReq(userInfo),
+				addPhotoReq(formData, accessToken)	
 			])
 			console.log(results);
 			results.forEach(result => {

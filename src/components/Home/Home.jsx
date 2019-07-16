@@ -3,15 +3,27 @@ import { Link, Redirect } from 'react-router-dom';
 
 import { getState } from '../../utils/context';
 import { getFromStorage } from '../../utils/storage';
-import { fetchData } from '../../helpers/apiHelper';
+import { fetchHomePage } from '../../helpers/apiHelper';
 import { refresh } from '../../services/token.service';
 
 const Home = () => {
 	const { dispatch } = getState();
 	const [isLoading, setIsLoading] = useState(false);
 	const [redirect, setRedirect] = useState(false);
+	const [error, setError] = useState('')
 
 	useEffect(() => {
+		const waitFetchAndDispatch = async () => {
+			setIsLoading(true)
+			const result = await fetchHomePage(accessToken)
+			if (result.success) {
+				dispatch({ type: `ADD_INFO`, payload: result });
+			} else {
+				setError(result.message)
+			}
+			setIsLoading(false)
+		}
+
 		const tokensfromStorage = getFromStorage('tokens');
 		if (tokensfromStorage) {
 			const {
@@ -21,9 +33,7 @@ const Home = () => {
 			} = getFromStorage('tokens');
 
 			if (expiresIn > +new Date()) {
-				setIsLoading(true);
-				fetchData(accessToken, dispatch, 'ADD_INFO');
-				setIsLoading(false);
+				waitFetchAndDispatch()
 			} else {
 				refresh(refreshToken);
 			}
@@ -43,6 +53,11 @@ const Home = () => {
 				isLoading ?
 					<p>Loading...</p> :
 					null
+			}
+			{
+				error ? 
+				error :
+				null
 			}
 			<ul>
 				<h1>Home</h1>
