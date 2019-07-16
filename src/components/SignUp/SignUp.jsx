@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { signUpReq } from '../../helpers/apiHelper';
-import { useInput } from '../../helpers/customHooks'
+import { useInput } from '../../helpers/customHooks';
 
 const SignUp = () => {
 	const [redirect, setRedirect] = useState(false);
 	const { value:login, bind:bindLogin } = useInput('');
-    const { value:password, bind:bindPassword } = useInput('');
-    const { value:confirmPassword, bind:bindConfirmPassword } = useInput('');
-    const { value:email, bind:bindEmail } = useInput('');
+	const { value:password, bind:bindPassword } = useInput('');
+	const { value:confirmPassword, bind:bindConfirmPassword } = useInput('');
+	const { value:email, bind:bindEmail } = useInput('');
 	const [error, setError] = useState('');
 
 	const handleSubmit = async() => {
@@ -53,8 +53,8 @@ const SignUp = () => {
 			<p>
 				{
 					error ?
-					error : 
-					null
+						error : 
+						null
 				}
 			</p>
 			<p>

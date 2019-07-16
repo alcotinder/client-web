@@ -5,11 +5,11 @@ import {
 } from '../../utils/storage';
 
 import { signInReq } from '../../helpers/apiHelper';
-import { useInput } from '../../helpers/customHooks'
+import { useInput } from '../../helpers/customHooks';
 
 const SignIn = () => {
 	const { value:login, bind:bindLogin } = useInput('');
-    const { value:password, bind:bindPassword } = useInput('');
+	const { value:password, bind:bindPassword } = useInput('');
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState('');
 

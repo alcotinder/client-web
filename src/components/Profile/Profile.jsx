@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { getFromStorage } from '../../utils/storage';
 
 const Profile = () => {
 	const { accessToken, expiresIn } = getFromStorage('tokens');
+
+	
+
 	return (
 		<div>
 			<p>

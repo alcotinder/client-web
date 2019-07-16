@@ -16,7 +16,10 @@ import { UserContext } from '../../utils/context';
 import { infoReducer } from '../../helpers/reducers';
 
 const inititalState = {
-	protected: '',
+	name: '',
+    lastname: '',
+    city: '',
+    drinks: '',
 };
 
 const App = () => {

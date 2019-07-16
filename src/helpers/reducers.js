@@ -1,8 +1,13 @@
 const infoReducer = (state, action) => {
 	switch (action.type) {
 	case 'ADD_INFO':
-		state.protected = action.payload.message;
-		return state;
+		return {
+			...state,
+			name: action.payload.name,
+			lastname: action.payload.lastname,
+			city: action.payload.city,
+			drinks: action.payload.drinks,
+		};
 	default:
 		return state;
 	}

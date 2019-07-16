@@ -22,27 +22,27 @@ const Home = () => {
 
 			if (expiresIn > +new Date()) {
 				setIsLoading(true);
-				fetchData(accessToken);
+				fetchData(accessToken, dispatch, 'ADD_INFO');
 				setIsLoading(false);
 			} else {
 				refresh(refreshToken);
 			}
 		} else {
-			setRedirect(true)
+			setRedirect(true);
 		}
 
 	}, []);
 
 	if (redirect) {
-		return <Redirect to='/signin'/>
+		return <Redirect to='/signin'/>;
 	} 
 
 	return (
 		<div>
 			{
 				isLoading ?
-				<p>Loading...</p> :
-				null
+					<p>Loading...</p> :
+					null
 			}
 			<ul>
 				<h1>Home</h1>
