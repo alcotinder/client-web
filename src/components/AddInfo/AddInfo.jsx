@@ -9,7 +9,7 @@ import { getFromStorage } from '../../utils/storage'
 const AddInfo = () => {
 	const photo = useRef(null);
 	const { value:name, bind:bindName } = useInput('');
-	const { value:lastName, bind:bindLastName } = useInput('');
+	const { value:lastname, bind:bindLastName } = useInput('');
 	const { value:city, bind:bindCity } = useInput('');
 	const { value:drinks, bind:bindDrinks } = useInput('');
 	const [error, setError]  = useState('')
@@ -21,30 +21,38 @@ const AddInfo = () => {
 			accessToken
 		} = getFromStorage('tokens');
 		const formData = new FormData();
-		formData.append('photo', photo.current.files[0], photo.current.files[0].name);
-		//formData.append('user', JSON.stringify({}))
-		const userInfo = {name, lastName, city, drinks}
+		formData.append('userAvatar', photo.current.files[0]);
+		const userInfo = {name, lastname, city, drinks}
 		if (validateInfo(userInfo)) {
 			const results = await Promise.all([
-				addInfoReq(userInfo),
+				addInfoReq(userInfo, accessToken),
 				addPhotoReq(formData, accessToken)	
 			])
-			console.log(results);
 			results.forEach(result => {
-				if (!result.success) setFlag(false);
+				if (!result.success) {
+					setFlag(false)
+					setError(result.message)
+				}
 			})
-			if (flag) setRedirect(true)
-			
+			setRedirect(true)
 		} else {
 			setError('Invalid Input')
 		}
-		     
-		// Add info with dispatch to global state   
-		//if (result.success) return <Redirect to='/signin'/>;
 	};
 
-	if (redirect) {
-		return <Redirect to='/signin'/>
+	if (redirect && flag) {
+		return (
+		<div>
+		<Redirect to='/signin'/>
+		<p>
+			{
+				error ?
+				error :
+				null
+			}
+		</p>
+		</div>
+		)
 	}
 
 	return (
