@@ -1,6 +1,6 @@
 const { stringify } = JSON;
 
-const API_URL = 'https://c3378224.ngrok.io';
+const API_URL = 'https://da1708e3.ngrok.io';
 
 const signInReq = async(login, password) => {
 	const endpoint = '/signin';
@@ -42,45 +42,51 @@ const addPhotoReq = async (formData, accessToken) => {
 	const endpoint = '/users/avatars/upload';
 	const url = `${API_URL}${endpoint}`;
 	const result = await fetch(url, {
-		method: 'POST',
+		method: 'PUT',
 		body: formData,
 		headers: {
 			'Authorization': `Bearer ${accessToken}`,
-			'Content-Type': 'multipart/form-data'
 		},
 	});
 	const body = await result.json();
 	return body;
 };
 
-const addInfoReq = async userInfo => {
-	const endpoint ='';
+const addInfoReq = async (userInfo, accessToken) => {
+	const endpoint ='/users/bio';
 	const url = `${API_URL}${endpoint}`;
 	const result = await fetch(url, {
-		method: 'POST',
+		method: 'PUT',
 		body: stringify(userInfo),
 		headers: {
 			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${accessToken}`,
 		},
 	});
 	const body = await result.json();
 	return body
 }
 
-const getPhotoReq = async (login) => {
-	const endpoint ='';
-	const url = new URL(`${API_URL}${endpoint}`)
-	url.searchParams.append('login', login)
+const getPhotoReq = async login => {
+	const endpoint ='/users/avatars/';
+	const url = `${API_URL}${endpoint}${login}`
 	const result = await fetch(url);
-	console.log(result)
+	const body = await result.blob()
+	return body
 }
 
-const getInfoReq = async (accessToken,login) => {
-	const endpoint ='';
-	const url = new URL(`${API_URL}${endpoint}`)
-	url.searchParams.append('login', login)
-	const result = await protectedReq(accessToken, url);
-	return result;	
+const getInfoReq = async (accessToken, login) => {
+	const endpoint ='/users/bio/';
+	const url = `${API_URL}${endpoint}${login}`
+	const result = await fetch(url, {
+		method: 'GET',
+		headers: {
+			'Content-type': 'application/json',
+			'Authorization': `Bearer ${accessToken}`,
+		},		
+	})
+	const body = await result.json()
+	return body;	
 }
 
 const refreshTokensReq = async refreshToken => {
@@ -89,7 +95,7 @@ const refreshTokensReq = async refreshToken => {
 	const result = await fetch(url, {
 		method: 'GET',
 		headers: {
-			'Content-type': 'application/json',
+			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${refreshToken}`,
 		},
 	});
@@ -110,9 +116,9 @@ const protectedReq = async (accessToken, url) => {
 };
 
 const fetchHomePage = async accessToken => {
-	const endpoint = ''
+	const endpoint = '/api/auth/refresh-token'
 	const url = `${API_URL}${endpoint}`
-	const result = await protectedReq(accessToken, url);
+	const result = await protectedReq(accessToken, 'https://da1708e3.ngrok.io/api/auth/refresh-token');
 	return result;
 };
 
