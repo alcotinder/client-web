@@ -16,11 +16,12 @@ import { UserContext } from '../../utils/context';
 import { infoReducer } from '../../helpers/reducers';
 
 const inititalState = {
-	login: '',
-	name: 'Andrew',
+	login: 'w',
+	name: '',
     lastname: '',
     city: '',
 	drinks: '',
+	photo: null
 };
 
 const App = () => {
