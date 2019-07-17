@@ -1,5 +1,5 @@
 const validateInfo = () => {
-    
+    return true
 }
 
 const vlaidateSignUp = () => {
