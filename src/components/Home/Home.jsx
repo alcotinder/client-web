@@ -13,17 +13,6 @@ const Home = () => {
 	const [error, setError] = useState('')
 
 	useEffect(() => {
-		const waitFetchAndDispatch = async () => {
-			setIsLoading(true)
-			const result = await fetchHomePage(accessToken)
-			if (result.success) {
-				dispatch({ type: `ADD_INFO`, payload: result });
-			} else {
-				setError(result.message)
-			}
-			setIsLoading(false)
-		}
-
 		const tokensfromStorage = getFromStorage('tokens');
 		if (tokensfromStorage) {
 			const {
@@ -32,7 +21,20 @@ const Home = () => {
 				refreshToken,
 			} = getFromStorage('tokens');
 
+			const waitFetchAndDispatch = async () => {
+				setIsLoading(true)
+				const result = await fetchHomePage(accessToken)
+				console.log(result)
+				if (result.success) {
+					console.log(true)
+				} else {
+					setError(result.message)
+				}
+				setIsLoading(false)
+			}
+
 			if (expiresIn > +new Date()) {
+				console.log(1)
 				waitFetchAndDispatch()
 			} else {
 				refresh(refreshToken);
