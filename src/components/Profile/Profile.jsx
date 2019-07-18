@@ -7,7 +7,8 @@ import {
 	addInfoReq, 
 	addPhotoReq
 } from '../../helpers/apiHelper'
-import { getState } from '../../utils/context';
+import { getState } from '../../store/context';
+import { checkValidtoken } from '../../services/token.service'
 
 const Profile = () => {
 	const { accessToken, expiresIn, refreshToken } = getFromStorage('tokens');
@@ -17,14 +18,20 @@ const Profile = () => {
 	const [photoSaved, setPhotoSaved] = useState('')
 	
 	const [isLoading, setIsLoading] = useState(true);
-	useEffect(() => {
+	useLayoutEffect(() => {
+		checkValidtoken(expiresIn, refreshToken)
 		const fetchInfoAndPhoto = async () => {
-			setIsLoading(true)
 			const results = await Promise.all([
 				getInfoReq(accessToken, state.login),
 				getPhotoReq(state.login)
 			])
 			dispatch({type: 'ADD_INFO', payload: results[0].bio})
+
+			setName(results[0].bio.name);
+			setLastName(results[0].bio.lastname);	
+			setCity(results[0].bio.city);
+			setDrinks(results[0].bio.drinks);
+
 			const photoUrl = URL.createObjectURL(results[1])
 			dispatch({type: 'ADD_PHOTO', payload: photoUrl})
 			setIsLoading(false)
@@ -32,20 +39,18 @@ const Profile = () => {
 		fetchInfoAndPhoto()		
 	}, [])
 	
-	const nowName = state.name;
-	const { value: name, bind:bindName } = useInput(state.name);
-	const { value: lastname, bind:bindLastName } = useInput(state.lastname);
-	const { value: city, bind:bindCity } = useInput(state.city);
-	const { value: drinks, bind:bindDrinks } = useInput(state.drinks);
+	const { value: name, bind:bindName, setValue: setName } = useInput('');
+	const { value: lastname, bind:bindLastName, setValue: setLastName } = useInput('');
+	const { value: city, bind:bindCity, setValue: setCity } = useInput('');
+	const { value: drinks, bind:bindDrinks, setValue: setDrinks } = useInput('');
 	const [error, setError] = useState('')
 	const [editing, setEditing] = useState(false)
 
 	const saveInfoChanges = async () => {
-		dispatch({type:'EDIT_INFO', payload:{name, lastname, city, drinks}})
-		console.log(state)
 		try {
 			const result = await addInfoReq({name, lastname, city, drinks},accessToken)
 			if (result.success) {
+				dispatch({type:'EDIT_INFO', payload:{name, lastname, city, drinks}})
 				setEditing(false)
 				setInfoSaved('Saved successfully')
 			} else {
@@ -63,9 +68,11 @@ const Profile = () => {
 			const result = await addPhotoReq(formData, accessToken)	
 			console.log(result)
 			if (result.success) {
+				console.log(photo.current.files[0])
+				dispatch({type: 'ADD_PHOTO', payload: photo.current.files[0]})
 				setPhotoSaved('Saved successfully')
 			}  else {
-				setError('Some error')
+				setError('Some error1')
 			}
 		} catch (error) {
 			setError('Some Error')
@@ -92,6 +99,11 @@ const Profile = () => {
 						{
 							photoSaved ?
 							photoSaved :
+							null
+						}
+						{
+							error ? 
+							error :
 							null
 						}
 					</p>

@@ -12,8 +12,8 @@ import SignUp from '../SignUp/SignUp';
 import Profile from '../Profile/Profile';
 import AddInfo from '../AddInfo/AddInfo';
 
-import { UserContext } from '../../utils/context';
-import { infoReducer } from '../../helpers/reducers';
+import { UserContext } from '../../store/context';
+import { infoReducer } from '../../store/reducers';
 
 const inititalState = {
 	login: 'w',

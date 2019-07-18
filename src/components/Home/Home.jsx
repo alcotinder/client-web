@@ -1,13 +1,14 @@
 import React, {  useEffect, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import { getState } from '../../utils/context';
+import { getState } from '../../store/context';
 import { getFromStorage } from '../../utils/storage';
 import { fetchHomePage } from '../../helpers/apiHelper';
-import { refresh } from '../../services/token.service';
+import { checkValidtoken } from '../../services/token.service';
+
 
 const Home = () => {
-	const { dispatch } = getState();
+	const { state, dispatch } = getState();
 	const [isLoading, setIsLoading] = useState(false);
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState('')
@@ -20,25 +21,19 @@ const Home = () => {
 				expiresIn,
 				refreshToken,
 			} = getFromStorage('tokens');
-
+			checkValidtoken(expiresIn, refreshToken)
 			const waitFetchAndDispatch = async () => {
 				setIsLoading(true)
-				const result = await fetchHomePage(accessToken)
-				console.log(result)
-				if (result.success) {
-					console.log(true)
-				} else {
-					setError(result.message)
-				}
+				// //const result = await fetchHomePage(accessToken)
+				// ///console.log(result)
+				// if (result.success) {
+				// 	console.log(true)
+				// } else {
+				// 	setError(result.message)
+				// }
 				setIsLoading(false)
 			}
-
-			if (expiresIn > +new Date()) {
-				console.log(1)
-				waitFetchAndDispatch()
-			} else {
-				refresh(refreshToken);
-			}
+			waitFetchAndDispatch()
 		} else {
 			setRedirect(true);
 		}

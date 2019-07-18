@@ -6,7 +6,7 @@ import {
 
 import { signInReq } from '../../helpers/apiHelper';
 import { useInput } from '../../helpers/customHooks';
-import { getState } from '../../utils/context';
+import { getState } from '../../store/context'
 
 const SignIn = () => {
 	const { state, dispatch }  = getState();
