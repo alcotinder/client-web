@@ -104,18 +104,6 @@ const refreshTokensReq = async refreshToken => {
 	return body;
 };
 
-// const protectedReq = async(accessToken, url) => {
-// 	const result = await fetch(url, {
-// 		method: 'GET',
-// 		headers: {
-// 			'Content-type': 'application/json',
-// 			'Authorization': `Bearer ${accessToken}`,
-// 		},
-// 	});
-// 	const body = await result.json();
-// 	return body;
-// };
-
 const getUserAvatar = async accessToken => {
 	const endpoint = '/users/avatar';
 	const url = `${API_URL}${endpoint}`;
