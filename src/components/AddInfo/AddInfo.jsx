@@ -1,91 +1,82 @@
 import React, { useState, useRef } from 'react';
-import { Redirect } from 'react-router-dom';
-import { useInput } from '../../helpers/customHooks';
 import { addInfoReq, addPhotoReq } from '../../helpers/apiHelper';
-import { validateInfo } from '../../helpers/validation'
-import { getFromStorage } from '../../utils/storage'
-
+import { getFromStorage } from '../../utils/storage';
+import { refresh } from '../../services/token.service';
+import getState from '../../services/state.service';
 
 const AddInfo = () => {
-	const photo = useRef(null);
-	const { value:name, bind:bindName } = useInput('');
-	const { value:lastname, bind:bindLastName } = useInput('');
-	const { value:city, bind:bindCity } = useInput('');
-	const { value:drinks, bind:bindDrinks } = useInput('');
-	const [error, setError]  = useState('')
-	const [redirect, setRedirect] = useState(false)
-	const [flag, setFlag] = useState(true);
 
-	const handleSubmit = async () => {
-		const {
-			accessToken
-		} = getFromStorage('tokens');
+	const { state, dispatch } = getState();
+	const photo = useRef(null);
+
+	const [name, setname] = useState(state.name);
+	const [lastname, setlastname] = useState(state.lastname);
+	const [city, setcity] = useState(state.city);
+	const [drinks, setdrinks] = useState(state.drinks);
+	const [error, setError]  = useState('');
+
+	const uploadPhoto = async() => {
+		const { accessToken, refreshToken, expiresIn } = getFromStorage('tokens');
 		const formData = new FormData();
 		formData.append('userAvatar', photo.current.files[0]);
-		const userInfo = {name, lastname, city, drinks}
-		if (validateInfo(userInfo)) {
-			const results = await Promise.all([
-				addInfoReq(userInfo, accessToken),
-				addPhotoReq(formData, accessToken)	
-			])
-			results.forEach(result => {
-				if (!result.success) {
-					setFlag(false)
-					setError(result.message)
-				}
-			})
-			setRedirect(true)
-		} else {
-			setError('Invalid Input')
+
+		if (+expiresIn < new Date()) {
+      const tokens = await refresh(refreshToken);
+			if (!tokens.success) setError('Some error');
 		}
+		const result = await addPhotoReq(formData, accessToken);
+    setError(result.message);
 	};
 
-	if (redirect && flag) {
-		return (
-		<div>
-		<Redirect to='/signin'/>
-		<p>
-			{
-				error ?
-				error :
-				null
-			}
-		</p>
-		</div>
-		)
-	}
+	const updateInfo = async e => {
+		e.preventDefault();
+		const { accessToken, refreshToken, expiresIn } = getFromStorage('tokens');
+		if (+expiresIn < new Date()) {
+			const tokens = await refresh(refreshToken);
+			if (!tokens.success) setError('Some error');
+		}
+		const userInfo = {
+			name,
+			lastname,
+			city,
+			drinks,
+		};
+    const result = await addInfoReq(userInfo, accessToken);
+    setError(result.message);
+	};
 
 	return (
 		<div>
-			<h1>
-            AddInfoPage
-			</h1>
-			<p>
-				{
-					error ?
-					error :
-					null
-				}
-			</p>
-			<p>
-				<label>Your name: </label>
-				<input {...bindName}/>
-			</p>
-			<p>
-				<label>Your Last Name: </label>
-				<input {...bindLastName}/>
-			</p>
-			<label>Your photo: </label>
-			<input type="file" ref={photo} />
-			<p>
-				<label>Your city: </label>
-				<input {...bindCity}/>
-			</p>
-			<p>
-				<label>Your favourite drink: </label>
-				<input {...bindDrinks}/>
-			</p>
-			<button onClick={handleSubmit} >Submit</button>
+			<h1>Add info page</h1>
+			<p>{ error ? error : null }</p>
+			<form>
+				<p>
+					<label>Your photo: </label>
+					<input type="file" ref={photo} />
+					<button onClick={uploadPhoto} >Upload photo</button>
+				</p>
+				<p>
+					<label>Your firstname: </label>
+					<input value={name} onChange={e => setname(e.target.value)}
+						placeholder='First name' type='text' name='firstName'required/>
+				</p>
+				<p>
+					<label>Your lastname: </label>
+					<input value={lastname} onChange={e => setlastname(e.target.value)}
+						placeholder='Last name' type='text' name='lastName'required/>
+				</p>
+				<p>
+					<label>Your city: </label>
+					<input value={city} onChange={e => setcity(e.target.value)}
+						placeholder='City' type='text' name='city'required/>
+				</p>
+				<p>
+					<label>Your favourite drink: </label>
+					<input value={drinks} onChange={e => setdrinks(e.target.value)}
+						placeholder='Favourite drink' type='text' name='drink'required/>
+				</p>
+			</form>
+			<button onClick={updateInfo} >Update info</button>
 		</div>
 	);
 };
