@@ -1,5 +1,5 @@
 import { getFromStorage, setInStorage } from '../utils/storage';
-import { protectedReq, refreshTokensReq } from '../helpers/apiHelper';
+import { refreshTokensReq } from '../helpers/apiHelper';
 
 const refresh = async refreshToken => {
 	const tokens = await refreshTokensReq(refreshToken);
