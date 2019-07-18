@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import {
 	setInStorage,
 } from '../../utils/storage';
 
 import { signInReq } from '../../helpers/apiHelper';
-import { useInput } from '../../helpers/customHooks';
-import { getState } from '../../utils/context';
+import UserContext from '../../store/dispatch';
 
 const SignIn = () => {
-	const { state, dispatch }  = getState();
-	const { value:login, bind:bindLogin } = useInput('');
-	const { value:password, bind:bindPassword } = useInput('');
+	const getState = () => useContext(UserContext);
+	const { state, dispatch } = getState();
+
+	const [login, setlogin] = useState('');
+	const [password, setpassword] = useState('');
+
 	const [redirect, setRedirect] = useState(false);
 	const [error, setError] = useState('');
 
-	const handleButtonClick = async() => {
-		try {
-			dispatch({type: 'ADD_LOGIN', payload: login })
-			const result = await signInReq(login, password);
-			if (result.success) {
-				const { accessToken, refreshToken, expiresIn } = result;
-				setInStorage('tokens', {
-					accessToken,
-					refreshToken,
-					expiresIn,
-				});
-				setRedirect(true);
-			} else {
-				setError(result.message);
-			}
-		} catch (error) {
-			setError('Some error');
+	const handleSubmit = async() => {
+		setError('');
+		const result = await signInReq(login, password);
+		if (result.success) {
+			const { accessToken, refreshToken, expiresIn } = result;
+			setInStorage('tokens', {
+				accessToken,
+				refreshToken,
+				expiresIn,
+			});
+			dispatch({ type: 'ADD_LOGIN', payload: login });
+			setRedirect(true);
+		} else {
+			setError(result.message);
 		}
 	};
 	if (redirect) {
@@ -40,26 +39,24 @@ const SignIn = () => {
 
 	return (
 		<div>
-			<p>
-				<label>Login: </label>
-				<input {...bindLogin} />
-			</p>
-			<p>
-				<label>Password: </label>
-				<input type='password' {...bindPassword} />
-			</p>
-			<p>
-				{
-					error ?
-						error :
-						null
-				}
-			</p>
-			<p>
-				<button onClick={handleButtonClick}>
+			<form>
+				<p>
+					<label>Login</label>
+					<input value={login} onChange={e => setlogin(e.target.value)}
+						placeholder='login' type='text' name='login' required/>
+				</p>
+				<p>
+					<label>Password</label>
+					<input value={password} onChange={e => setpassword(e.target.value)}
+						placeholder='password' type='text' name='password' required/>
+				</p>
+			</form>
+			<button onClick={handleSubmit}>
 					Submit
-				</button>
-			</p>
+			</button>
+			{
+				error ? error : null
+			}
 		</div>
 	);
 };
