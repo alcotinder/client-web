@@ -14,7 +14,15 @@ const logOut = () => {
 	});
 };
 
+const checkValidtoken = (expiresIn, refreshToken) => {
+	if (expiresIn < + new Date()) {
+		refresh(refreshToken)
+	};
+	return true;
+}
+
 export {
 	refresh,
 	logOut,
+	checkValidtoken
 };
