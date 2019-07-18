@@ -1,185 +1,83 @@
-import React, { useEffect, useLayoutEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+
+import getState from '../../services/state.service';
+import { refresh } from '../../services/token.service';
 import { getFromStorage } from '../../utils/storage';
-import { useInput } from '../../helpers/customHooks'
-import { 
-	getInfoReq, 
-	getPhotoReq, 
-	addInfoReq, 
-	addPhotoReq
-} from '../../helpers/apiHelper'
-import { getState } from '../../utils/context';
+import { getUserAvatar, getUserInfo } from '../../helpers/apiHelper';
 
 const Profile = () => {
-	const { accessToken, expiresIn, refreshToken } = getFromStorage('tokens');
-	const { state, dispatch} = getState();
-	const photo = useRef(null);
-	const [infoSaved, setInfoSaved] = useState('')
-	const [photoSaved, setPhotoSaved] = useState('')
+	const { state, dispatch } = getState();
 	
-	const [isLoading, setIsLoading] = useState(true);
+	const [name, setname] = useState('');
+	const [lastname, setlastname] = useState('');
+	const [city, setcity] = useState('');
+	const [drinks, setdrinks] = useState('');
+
+	const [isLoading, setIsLoading] = useState(false);
+	const [redirect, setRedirect] = useState(false);
+	const [error, setError] = useState('');
+	
 	useEffect(() => {
-		const fetchInfoAndPhoto = async () => {
-			setIsLoading(true)
-			const results = await Promise.all([
-				getInfoReq(accessToken, state.login),
-				getPhotoReq(state.login)
-			])
-			dispatch({type: 'ADD_INFO', payload: results[0].bio})
-			const photoUrl = URL.createObjectURL(results[1])
-			dispatch({type: 'ADD_PHOTO', payload: photoUrl})
-			setIsLoading(false)
+		const tokensfromStorage = getFromStorage('tokens');
+		if (tokensfromStorage) {
+			const {
+				accessToken,
+				expiresIn,
+				refreshToken,
+			} = getFromStorage('tokens');
+
+			const fetchData = async() => {
+				setIsLoading(true);
+				const result = await getUserInfo(accessToken);
+				if (result.success) {
+					const {
+						name,
+						lastname,
+						drinks,
+						city,
+					} = result.bio;
+
+					setname(name);
+					setlastname(lastname);
+					setcity(city);
+					setdrinks(drinks);
+					dispatch({ type: 'ADD_INFO', payload: result.bio });
+				}
+				setIsLoading(false);
+			};
+			
+			const updateData = (async() => {
+				if (expiresIn < +new Date()) {
+					await refresh(refreshToken);
+				}
+				await fetchData();
+			})();
+
+
+		} else {
+			setRedirect(true);
 		}
-		fetchInfoAndPhoto()		
-	}, [])
-	
-	const nowName = state.name;
-	const { value: name, bind:bindName } = useInput(state.name);
-	const { value: lastname, bind:bindLastName } = useInput(state.lastname);
-	const { value: city, bind:bindCity } = useInput(state.city);
-	const { value: drinks, bind:bindDrinks } = useInput(state.drinks);
-	const [error, setError] = useState('')
-	const [editing, setEditing] = useState(false)
 
-	const saveInfoChanges = async () => {
-		dispatch({type:'EDIT_INFO', payload:{name, lastname, city, drinks}})
-		console.log(state)
-		try {
-			const result = await addInfoReq({name, lastname, city, drinks},accessToken)
-			if (result.success) {
-				setEditing(false)
-				setInfoSaved('Saved successfully')
-			} else {
-				setError('Some error')
-			}
-		} catch (error) {
-			setError('Some error')
-		}
-	}
+	}, []);
 
-	const saveNewAvatar = async () => {
-		const formData = new FormData();
-		formData.append('userAvatar', photo.current.files[0]);
-		try {
-			const result = await addPhotoReq(formData, accessToken)	
-			console.log(result)
-			if (result.success) {
-				setPhotoSaved('Saved successfully')
-			}  else {
-				setError('Some error')
-			}
-		} catch (error) {
-			setError('Some Error')
-		}
-	}
+	if (redirect) return <Redirect to='/signin'/>;
 
+	if (isLoading) return <div> Loading... </div>;
 
-	if (isLoading) {
-		return (
-			<div>
-				<h1>
-					Is Loading
-				</h1>
-			</div>
-		)
-	} else {
-		if (editing) {
-			return (
-				<div>
-					<h1>
-						Editing
-					</h1>
-					<p>
-						{
-							photoSaved ?
-							photoSaved :
-							null
-						}
-					</p>
-					<p>
-						<label>photo</label>
-						<input type="file" ref={photo} />
-					</p>
-					<p>
-						<button onClick={saveNewAvatar}>Save new Avatar</button>
-					</p>
-					<p>
-						<label>Name</label>
-						<input {...bindName} value={name}/>
-					</p>
-					<p>
-						<label>Last Name</label>
-						<input {...bindLastName} value={lastname}/>
-					</p>
-					<p>
-						<label>City</label>
-						<input {...bindCity} value={city}/>
-					</p>
-					<p>
-						<label>Drinks</label>
-						<input {...bindDrinks} value={drinks}/>
-					</p>
-					<button onClick={saveInfoChanges}>
-						Save changes
-					</button>
-				</div>
-			)
-		 } else {
-			return (
-				<div>
-					<h1>
-						Not Editing
-					</h1>
-					<p>
-						<label>
-							Photo: 
-						</label>
-						<img src={state.photo} width="200" height="200" />
-					</p>
-					<p>
-						<label>
-							Name: 
-						</label>
-						{
-							state.name
-						}
-					</p>
-					<p>
-						<label>
-							Last Name: 
-						</label>
-						{
-							state.lastname
-						}
-					</p>
-					<p>
-						<label>
-							City: 
-						</label>
-						{
-							state.city
-						}
-					</p>
-					<p>
-						<label>
-							Drinks: 
-						</label>
-						{
-							state.drinks
-						}
-					</p>
-					<p>
-						{
-							infoSaved ?
-							infoSaved :
-							null
-						}
-					</p>
-					<button onClick={() => setEditing(true)}>Edit Profile</button>
-				</div>
-		
-			);
-		 }
-	}
+	return (
+		<div>
+			{ error ? error : null }
+
+			<h1>Home</h1>
+
+			<p><label>Name: {name}</label></p>
+			<p><label>Last name: {lastname}</label></p>
+			<p><label>City: {city}</label></p>
+			<p><label>Drinks: {drinks}</label></p>
+
+		</div>
+	);
 };
 
 export default Profile;
