@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, Fragment } from 'react';
+import React, { useReducer } from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -12,37 +12,30 @@ import SignUp from '../SignUp/SignUp';
 import Profile from '../Profile/Profile';
 import AddInfo from '../AddInfo/AddInfo';
 
-import { UserContext } from '../../utils/context';
-import { infoReducer } from '../../helpers/reducers';
+import UserContext from '../../store/dispatch';
+import infoReducer from '../../store/reducer';
 
 const inititalState = {
-	login: 'w',
+	login: '',
 	name: '',
-    lastname: '',
-    city: '',
+	lastname: '',
+	city: '',
 	drinks: '',
-	photo: null
+	photo: null,
 };
 
 const App = () => {
 	const [state, dispatch] = useReducer(infoReducer, inititalState);
-
-	// useEffect(() => {
-	// }, []);
-
 	return (
 		<UserContext.Provider value={{ state, dispatch }}>
 			<Router>
-				{/* */}
+				<Header />
 				<Switch>
+					<Route path='/' exact render={() => <Home value={{ state }}/>} />
 					<Route path='/signin' component={SignIn} />
 					<Route path='/signup' component={SignUp} />
-					<Fragment>
-						<Header /> 
-						<Route path='/' exact component={Home} />
-						<Route path='/profile' component={Profile} />
-						<Route path='/addinfo' component={AddInfo} />
-					</Fragment>
+					<Route path='/profile' component={Profile} />
+					<Route path='/addinfo' component={AddInfo} />
 				</Switch>
 			</Router>
 		</UserContext.Provider>
