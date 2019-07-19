@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
+
 import { Redirect } from 'react-router-dom';
 import { signUpReq } from '../../helpers/apiHelper';
 
+import {
+  Avatar,
+  Button,
+  TextField,
+  Link,
+  Grid,
+  Typography,
+  Container,
+  Collapse,
+  CssBaseline,
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
+import useStyles from './style';
+
 const SignUp = () => {
+
   const [redirect, setRedirect] = useState(false);
   const [login, setlogin] = useState('');
   const [email, setemail] = useState('');
@@ -10,7 +27,10 @@ const SignUp = () => {
   const [confirmPassword, setconfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async() => {
+  const classes = useStyles();
+
+  const handleSubmit = async e => {
+    e.preventDefault();
     setError('');
     if (password !== confirmPassword) return setError('Passwords dont match');
     try {
@@ -25,45 +45,87 @@ const SignUp = () => {
     }
   };
 
-  const redirectToSignIn = () => {
-    setRedirect(true);
-  };
 
   if (redirect) {
     return <Redirect to='/signin'/>;
   }
 
   return (
-    <div>
-      <form>
-        <p>
-          <label>Login</label>
-          <input value={login} onChange={e => setlogin(e.target.value)}
-            placeholder='Login' type='text' name='login' required/>
-        </p>
-        <p>
-          <label>Email</label>
-          <input value={email} onChange={e => setemail(e.target.value)}
-            placeholder='Email' type='text' name='email' required/>
-        </p>
-        <p>
-          <label>Password</label>
-          <input value={password} onChange={e => setpassword(e.target.value)}
-            placeholder='Password' type='text' name='password' required/>
-        </p>
-        <p>
-          <label>Confirm password</label>
-          <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)}
-            placeholder='Confirm password' type='text' name='confirmPassword' required/>
-        </p>
-      </form>
-      <button onClick={handleSubmit}>
-					Submit
-      </button>
-      <p><button onClick={redirectToSignIn}>Do you already have an account?</button></p>
-      {	error ? error : null }
-    </div>
+    <Container component='main' maxWidth='xs'>
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component='h1' variant='h5'>
+          Sign up
+        </Typography>
+        <Collapse in={!!error} variant='h5'>
+          {error}
+        </Collapse>
+        <form className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label='Login'
+                value={login}
+                onChange={e => setlogin(e.target.value)}
+                autoFocus
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label='Email Address'
+                value={email}
+                onChange={e => setemail(e.target.value)}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label='Password'
+                type='password'
+                value={password}
+                onChange={e => setpassword(e.target.value)}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label='Confirm password'
+                type='password'
+                value={confirmPassword}
+                onChange={e => setconfirmPassword(e.target.value)}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Button
+            onClick={handleSubmit}
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+          >
+            Sign Up
+          </Button>
+          <Grid container justify='flex-end'>
+            <Grid item>
+              <Link href='/signin'>
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
   );
-};
+}
 
 export default SignUp;
