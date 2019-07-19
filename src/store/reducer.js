@@ -13,7 +13,7 @@ const infoReducer = (state, action) => {
       ...state,
       photo: action.payload,
     };
-  case 'ADD_LOGIN':
+  case 'LOGIN':
     return {
       ...state,
       login: action.payload,

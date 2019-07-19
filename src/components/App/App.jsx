@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -15,27 +15,76 @@ import AddInfo from '../AddInfo/AddInfo';
 import UserContext from '../../store/dispatch';
 import infoReducer from '../../store/reducer';
 
-const inititalState = {
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    margin: theme.spacing(0, 0, 0),
+    padding: theme.spacing(0, 0, 0),
+    flexGrow: 1,
+  },
+}));
+
+const initialState = {
   login: '',
   name: '',
   lastname: '',
   city: '',
   drinks: '',
-  photo: null,
+  photo: '',
 };
 
 const App = () => {
-  const [state, dispatch] = useReducer(infoReducer, inititalState);
+  const classes = useStyles();
+  const [online, setOnline] = useState(false);
+  const [info, setInfo] = useState(initialState);
+  const [state, dispatch] = useReducer(infoReducer, initialState);
+  const updateOnlineStatus = value => {
+    setOnline(value);
+  };
+
+  const updateInfo = value => {
+    setInfo(value);
+  };
+
+  // useEffect(() => {
+  //   const { login, name, lastname, city, drinks, photo } = info;
+  //   dispatch({ type: 'ADD_INFO', payload: { name, lastname, city, drinks } });
+  //   dispatch({ type: 'ADD_PHOTO', payload: photo });
+  //   dispatch({ type: 'LOGIN', payload: login });
+  // }, [info]);
+
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
+    <UserContext.Provider value={{ state, dispatch }} className={classes.root}>
       <Router>
-        <Header />
+
         <Switch>
-          <Route path='/' exact render={() => <Home value={{ state }}/>} />
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
-          <Route path='/profile' component={Profile} />
-          <Route path='/addinfo' component={AddInfo} />
+          <>
+            <Header online={online}/>
+            <CssBaseline />
+            <Container xs={12} sm={6} >
+              <Route path='/' exact component={Home} />
+              <Route path='/profile'
+                render={() => <Profile
+                  updateOnlineStatus={updateOnlineStatus}
+                  updateInfo={updateInfo}
+                /> }
+              />
+              <Route path='/addinfo'
+                render={() => <AddInfo
+                  updateOnlineStatus={updateOnlineStatus}
+                  updateInfo={updateInfo}
+                /> }
+              />
+            </Container>
+
+          </>
         </Switch>
       </Router>
     </UserContext.Provider>

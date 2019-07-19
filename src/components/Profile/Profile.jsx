@@ -4,21 +4,17 @@ import { Link, Redirect } from 'react-router-dom';
 import getState from '../../services/state.service';
 import { refresh } from '../../services/token.service';
 import { getFromStorage } from '../../utils/storage';
-import { getUserAvatar, getUserInfo } from '../../helpers/apiHelper';
+import { fetchData } from '../../services/user.service';
 
-const Profile = () => {
+const Profile = props => {
   const { state, dispatch } = getState();
-
-  const [name, setname] = useState('');
-  const [lastname, setlastname] = useState('');
-  const [city, setcity] = useState('');
-  const [drinks, setdrinks] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    props.updateOnlineStatus(true);
     const tokensfromStorage = getFromStorage('tokens');
     if (tokensfromStorage) {
       const {
@@ -27,38 +23,21 @@ const Profile = () => {
         refreshToken,
       } = getFromStorage('tokens');
 
-      const fetchData = async() => {
-        setIsLoading(true);
-        const result = await getUserInfo(accessToken);
-        if (result.success) {
-          const {
-            name,
-            lastname,
-            drinks,
-            city,
-          } = result.bio;
-
-          setname(name);
-          setlastname(lastname);
-          setcity(city);
-          setdrinks(drinks);
-          dispatch({ type: 'ADD_INFO', payload: result.bio });
-        }
-        setIsLoading(false);
-      };
-
       const updateData = (async() => {
+        setIsLoading(true);
         if (expiresIn < +new Date()) {
-          await refresh(refreshToken);
+          const result = await refresh(refreshToken);
+          result.tokenExpired ? setRedirect(true) : null;
         }
-        await fetchData();
+        const info = await fetchData(dispatch, accessToken);
+        if (!info) return setRedirect(true);
+        props.updateInfo(info);
+        
+        setIsLoading(false);
       })();
-
-
     } else {
       setRedirect(true);
     }
-
   }, []);
 
   if (redirect) return <Redirect to='/signin'/>;
@@ -69,12 +48,13 @@ const Profile = () => {
     <div>
       { error ? error : null }
 
-      <h1>Home</h1>
-
-      <p><label>Name: {name}</label></p>
-      <p><label>Last name: {lastname}</label></p>
-      <p><label>City: {city}</label></p>
-      <p><label>Drinks: {drinks}</label></p>
+      <h1>Your profile</h1>
+      <img src={state.photo} width="200" height="200" />
+      <p><label>Name: {state.name}</label></p>
+      <p><label>Last name: {state.lastname}</label></p>
+      <p><label>City: {state.city}</label></p>
+      <p><label>Drinks: {state.drinks}</label></p>
+      <Link to='/addinfo'>Edit profile</Link>
 
     </div>
   );
