@@ -2,7 +2,7 @@
 
 const { stringify } = JSON;
 
-const API_URL = 'http://da1708e3.ngrok.io';
+const API_URL = 'http://localhost:8000';
 
 const signInReq = async(login, password) => {
   const endpoint = '/signin';
@@ -69,14 +69,6 @@ const addInfoReq = async(userInfo, accessToken) => {
   return body;
 };
 
-const getPhotoReq = async login => {
-  const endpoint = '/users/avatars/';
-  const url = `${API_URL}${endpoint}${login}`;
-  const result = await fetch(url);
-  const body = await result.blob();
-  return body;
-};
-
 const getInfoReq = async login => {
   const endpoint = `/users/bio/${login}`;
   const url = `${API_URL}${endpoint}`;
@@ -104,20 +96,6 @@ const refreshTokensReq = async refreshToken => {
   return body;
 };
 
-const getUserAvatar = async accessToken => {
-  const endpoint = '/users/avatar';
-  const url = `${API_URL}${endpoint}`;
-  const result = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
-  const body = await result.blob();
-  return body;
-};
-
 const getUserInfo = async accessToken => {
   const endpoint = '/users/bio';
   const url = `${API_URL}${endpoint}`;
@@ -139,7 +117,5 @@ export {
   addInfoReq,
   addPhotoReq,
   getInfoReq,
-  getPhotoReq,
-  getUserAvatar,
   getUserInfo,
 };
