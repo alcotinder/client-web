@@ -5,12 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { getFromStorage } from '../../utils/storage';
 
 const Home = () => {
-  const tokensfromStorage = getFromStorage('tokens');
-  const {
-    accessToken,
-    refreshToken,
-  } = tokensfromStorage;
-  if (accessToken && refreshToken) {
+  if (getFromStorage('tokens')) {
     return <Redirect to='/profile'/>;
   } else {
     return <Redirect to='/signup'/>;

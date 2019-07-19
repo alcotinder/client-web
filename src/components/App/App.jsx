@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -16,7 +16,6 @@ import UserContext from '../../store/dispatch';
 import infoReducer from '../../store/reducer';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -50,13 +49,6 @@ const App = () => {
   const updateInfo = value => {
     setInfo(value);
   };
-
-  // useEffect(() => {
-  //   const { login, name, lastname, city, drinks, photo } = info;
-  //   dispatch({ type: 'ADD_INFO', payload: { name, lastname, city, drinks } });
-  //   dispatch({ type: 'ADD_PHOTO', payload: photo });
-  //   dispatch({ type: 'LOGIN', payload: login });
-  // }, [info]);
 
   return (
     <UserContext.Provider value={{ state, dispatch }} className={classes.root}>

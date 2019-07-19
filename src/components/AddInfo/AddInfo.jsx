@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { addInfoReq, addPhotoReq } from '../../helpers/apiHelper';
 import { getFromStorage } from '../../utils/storage';
 import { refresh } from '../../services/token.service';
-import getState from '../../services/state.service';
 import { fetchData } from '../../services/user.service';
+import UserContext from '../../store/dispatch';
+import { Redirect } from 'react-router-dom';
 
 const AddInfo = props => {
-  const { state, dispatch } = getState();
+  const { state, dispatch } = useContext(UserContext);
+
   const photo = useRef(null);
 
   const [name, setname] = useState(state.name);
@@ -32,7 +34,7 @@ const AddInfo = props => {
           setIsLoading(true);
           if (+expiresIn < +new Date()) {
             const result = await refresh(refreshToken);
-            result.tokenExpired ? setRedirect(true) : null;
+            if(result.tokenExpired)setRedirect(true)
           }
           const info = await fetchData(dispatch, accessToken);
           if (!info) return setRedirect(true);
@@ -93,7 +95,7 @@ const AddInfo = props => {
       <form>
         <p>
           <label>Your photo: </label>
-          <img src={state.photo} width="200" height="200" />
+          <img alt='' src={state.photo} width="200" height="200" />
           <br />
           <input type='file' ref={photo} />
           <button onClick={uploadPhoto} >Upload photo</button>
