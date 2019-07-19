@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { logOut } from '../../services/token.service';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, CssBaseline, Container, IconButton, MenuIcon } from '@material-ui/core';
+import { AppBar, Toolbar, CssBaseline, Container, IconButton } from '@material-ui/core';
 
 
 const useStyles = makeStyles(theme => ({
