@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import {
   setInStorage,
 } from '../../utils/storage';
 
 import { signInReq } from '../../helpers/apiHelper';
-import UserContext from '../../store/dispatch';
 
 import useStyles from './style';
 import {
@@ -23,9 +22,6 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 const SignIn = () => {
-  // const getState = () => useContext(UserContext);
-  const { dispatch } = useContext(UserContext);
-
   const [login, setlogin] = useState('');
   const [password, setpassword] = useState('');
 
@@ -45,7 +41,6 @@ const SignIn = () => {
         refreshToken,
         expiresIn,
       });
-      dispatch({ type: 'ADD_LOGIN', payload: login });
       setRedirect(true);
     } else {
       setError(result.message);

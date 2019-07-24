@@ -45,10 +45,7 @@ const SignUp = () => {
     }
   };
 
-
-  if (redirect) {
-    return <Redirect to='/signin'/>;
-  }
+  if (redirect) return <Redirect to='/signin' />;
 
   return (
     <Container component='main' maxWidth='xs'>
