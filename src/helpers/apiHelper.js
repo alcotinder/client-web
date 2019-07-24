@@ -2,7 +2,7 @@
 
 const { stringify } = JSON;
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://alcotinder.herokuapp.com';
 
 const signInReq = async(login, password) => {
   const endpoint = '/signin';

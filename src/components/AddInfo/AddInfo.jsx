@@ -5,10 +5,20 @@ import { refresh } from '../../services/token.service';
 import { fetchData } from '../../services/user.service';
 import UserContext from '../../store/dispatch';
 import { Redirect } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
-const AddInfo = props => {
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
+}));
+const AddInfo = () => {
   const { state, dispatch } = useContext(UserContext);
-
+  const classes = useStyles();
   const photo = useRef(null);
 
   const [name, setname] = useState(state.name);
@@ -38,8 +48,6 @@ const AddInfo = props => {
           }
           const info = await fetchData(dispatch, accessToken);
           if (!info) return setRedirect(true);
-          props.updateOnlineStatus(true);
-          props.updateInfo(info);
           setname(info.name);
           setlastname(info.lastname);
           setcity(info.city);
@@ -97,7 +105,19 @@ const AddInfo = props => {
           <label>Your photo: </label>
           <img alt='' src={state.photo} width="200" height="200" />
           <br />
-          <input type='file' ref={photo} />
+          <input
+            type='file'
+            ref={photo}
+            accept="image/*"
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="contained" component="span" className={classes.button} >
+              Upload
+            </Button>
+          </label>
           <button onClick={uploadPhoto} >Upload photo</button>
         </p>
         <p>
@@ -118,7 +138,7 @@ const AddInfo = props => {
         <p>
           <label>Your favourite drink: </label>
           <input value={drinks} onChange={e => setdrinks(e.target.value)}
-            placeholder='Favourite drink' type='text' name='drink'/>
+            placeholder='Favourite drink' type='text' name='drinks'/>
         </p>
       </form>
       <button onClick={updateInfo}>Update info</button>

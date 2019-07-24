@@ -5,7 +5,7 @@ import { refresh } from '../../services/token.service';
 import { getFromStorage } from '../../utils/storage';
 import { fetchData } from '../../services/user.service';
 import UserContext from '../../store/dispatch';
-const Profile = props => {
+const Profile = () => {
   const { state, dispatch } = useContext(UserContext);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +13,6 @@ const Profile = props => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    props.updateOnlineStatus(true);
     const tokensfromStorage = getFromStorage('tokens');
     if (tokensfromStorage) {
       const {
@@ -26,13 +25,10 @@ const Profile = props => {
         setIsLoading(true);
         if (expiresIn < +new Date()) {
           const result = await refresh(refreshToken);
-          if(result.tokenExpired)setRedirect(true)
-
+          if(result.tokenExpired)setRedirect(true);
         }
         const info = await fetchData(dispatch, accessToken);
         if (!info) return setRedirect(true);
-        props.updateInfo(info);
-        
         setIsLoading(false);
       })();
     } else {
@@ -43,19 +39,16 @@ const Profile = props => {
   if (redirect) return <Redirect to='/signin'/>;
 
   if (isLoading) return <div> Loading... </div>;
-
   return (
     <div>
       { error ? error : null }
 
-      <h1>Your profile</h1>
+      <h1>{state.login}</h1>
       <img alt='' src={state.photo} width="200" height="200" />
-      <p><label>Name: {state.name}</label></p>
-      <p><label>Last name: {state.lastname}</label></p>
+      <p><label>{state.name} {state.lastname}</label></p>
       <p><label>City: {state.city}</label></p>
       <p><label>Drinks: {state.drinks}</label></p>
       <Link to='/addinfo'>Edit profile</Link>
-
     </div>
   );
 };
