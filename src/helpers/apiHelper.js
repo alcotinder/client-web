@@ -2,7 +2,7 @@
 
 const { stringify } = JSON;
 
-const API_URL = 'https://alcotinder.herokuapp.com';
+const API_URL = 'https://localhost:8443';
 
 const signInReq = async(login, password) => {
   const endpoint = '/signin';
@@ -110,6 +110,21 @@ const getUserInfo = async accessToken => {
   return body;
 };
 
+const postMessage = async (accessToken, message) => {
+  const endpoint = '/messages';
+  const url = `${API_URL}${endpoint}`;
+  const result = await fetch(url, {
+    method: 'POST',
+    body: stringify(message),
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+  const status = await result.status;
+  if (status === 200) return true;
+};
+
 export {
   signInReq,
   signUpReq,
@@ -118,4 +133,5 @@ export {
   addPhotoReq,
   getInfoReq,
   getUserInfo,
+  postMessage,
 };
