@@ -18,6 +18,11 @@ const infoReducer = (state, action) => {
       ...state,
       login: action.payload,
     };
+  case 'SOCKET':
+    return {
+      ...state,
+      socket: action.payload,
+    };
   default:
     return state;
   }
