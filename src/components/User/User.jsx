@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
-import { getInfoReq } from '../../helpers/apiHelper';
+import { getInfoReq, postMessage } from '../../helpers/apiHelper';
+
+import { getFromStorage } from '../../utils/storage';
 
 import UserContext from '../../store/dispatch';
 
@@ -16,8 +18,13 @@ const User = ({ match }) => {
   const [city, setcity] = useState('');
   const [drinks, setdrinks] = useState('');
   const [photo, setphoto] = useState('');
+  const [message, setmessage] = useState('');
 
   const [isExist, setIsExist] = useState(false);
+
+  // useEffect(() => {
+
+  // }, [input])
 
   useEffect(() => {
     const updateData = (async() => {
@@ -41,6 +48,22 @@ const User = ({ match }) => {
     })();
   }, [login]);
 
+  const sendMessage = async() => {
+    const {
+      accessToken,
+    } = getFromStorage('tokens');
+    const msg = {
+      message,
+      to: login,
+    };
+    if (state.login > login) {
+      msg.chatId = `${state.login}.${login}`;
+    } else {
+      msg.chatId = `${login}.${state.login}`;
+    }
+    await postMessage(accessToken, msg);
+  };
+
   if (isLoading) return <div> Loading... </div>;
 
   if(login === state.login) return <Redirect to='/profile'/>;
@@ -56,6 +79,8 @@ const User = ({ match }) => {
           <p><label>{name} {lastname}</label></p>
           <p><label>City: {city}</label></p>
           <p><label>Drinks: {drinks}</label></p>
+          <input type='text' value={message} onChange={e => setmessage(e.target.value)}></input>
+          <button onClick={sendMessage}>Message</button>
         </div>
       }
     </div>
