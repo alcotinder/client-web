@@ -14,6 +14,7 @@ export default makeStyles(theme => ({
       display: 'block',
     },
     fontWeight: 'bold',
+    cursor: 'pointer'
   },
   search: {
     position: 'relative',

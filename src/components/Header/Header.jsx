@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { Redirect, Link } from 'react-router-dom';
-import { logOut } from '../../services/token.service';
+import { logOutToken } from '../../services/token.service';
 import Logo from '../../Logo.png';
+
+import UserContext from '../../store/dispatch';
 
 import { 
   AppBar,
@@ -10,12 +12,15 @@ import {
   Button,
   Typography,
   InputBase,
-  Container
+  Container,
 } from '@material-ui/core/';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './style';
 
 const Header = () => {
+
+  const { state } = useContext(UserContext);
+
   const [search, setSearch] = useState('');
   const [login, setLogin] = useState('');
   const [redirect, setRedirect] = useState(false);
@@ -32,6 +37,10 @@ const Header = () => {
       setRedirect(true);
       setSearch('');
     }
+  };
+
+  const logOut = () => {
+    if (state.socket) state.socket.close();
   };
 
   return (
@@ -71,10 +80,10 @@ const Header = () => {
               </Link>
             </Button>
             <Button 
-              onClick={logOut} 
+              onClick={() => {logOutToken(); logOut(); }} 
               className={classes.menu}
             >
-              <Link className={classes.link} to='/signin'>
+              <Link className={classes.link} to='/signin' >
                 Logout
               </Link>
             </Button>
