@@ -21,7 +21,8 @@ export default makeStyles(theme => ({
     marginTop: theme.spacing(2),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    marginTop: theme.spacing(1),
+    // margin: theme.spacing(3, 0, 2),
   },
   textField: {
     marginTop: theme.spacing(1),

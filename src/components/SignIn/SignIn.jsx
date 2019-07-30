@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import {
   setInStorage,
 } from '../../utils/storage';
 
 import { signInReq } from '../../helpers/apiHelper';
+
+import UserContext from '../../store/dispatch';
+
+import connect from '../../helpers/socketHelper';
 
 import useStyles from './style';
 import {
@@ -22,6 +26,9 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 const SignIn = () => {
+
+  const { state, dispatch } = useContext(UserContext);
+
   const [login, setlogin] = useState('');
   const [password, setpassword] = useState('');
 
@@ -41,6 +48,8 @@ const SignIn = () => {
         refreshToken,
         expiresIn,
       });
+      const socket = connect(accessToken);
+      dispatch({ type: 'SOCKET', payload: socket });
       setRedirect(true);
     } else {
       setError(result.message);
@@ -82,18 +91,16 @@ const SignIn = () => {
             fullWidth
             required
           />
-          <span>
-            <Button
-              onClick={handleSubmit}
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}
-            >
+          <Button
+            onClick={handleSubmit}
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+          >
             Sign In
-            </Button>
-          </span>
+          </Button>
           <Grid container>
             <Grid item>
               <Link href='/signup'>
