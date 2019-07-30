@@ -12,7 +12,6 @@ import {
   Typography,
   Container,
   Collapse,
-  CssBaseline,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -49,7 +48,6 @@ const SignUp = () => {
 
   return (
     <Container component='main' maxWidth='xs'>
-      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -61,7 +59,7 @@ const SignUp = () => {
           {error}
         </Collapse>
         <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
+          <Grid spacing={0}>
             <Grid item xs={12}>
               <TextField
                 label='Login'

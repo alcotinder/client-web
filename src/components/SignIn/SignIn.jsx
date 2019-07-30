@@ -20,7 +20,6 @@ import {
   Typography,
   Container,
   Collapse,
-  CssBaseline,
 } from '@material-ui/core';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -61,7 +60,6 @@ const SignIn = () => {
 
   return (
     <Container component='div' maxWidth='xs'>
-      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

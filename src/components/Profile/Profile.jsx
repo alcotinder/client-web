@@ -5,6 +5,7 @@ import { refresh } from '../../services/token.service';
 import { getFromStorage } from '../../utils/storage';
 import { fetchData } from '../../services/user.service';
 import UserContext from '../../store/dispatch';
+
 const Profile = () => {
   const { state, dispatch } = useContext(UserContext);
 

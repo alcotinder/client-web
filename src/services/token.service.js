@@ -8,7 +8,7 @@ const refresh = async refreshToken => {
   return { tokenExpired: false };
 };
 
-const logOut = () => {
+const logOutToken = () => {
   setInStorage('tokens', {
     accessToken: '',
     expiresIn: '',
@@ -18,5 +18,5 @@ const logOut = () => {
 
 export {
   refresh,
-  logOut,
+  logOutToken,
 };
