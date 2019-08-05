@@ -40,7 +40,7 @@ const Header = () => {
   };
 
   const logOut = () => {
-    if (Object.keys(state.socket).length === 0) state.socket.close();
+    if (!Object.keys(state.socket).length) state.socket.close();
   };
 
   return (

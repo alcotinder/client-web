@@ -23,7 +23,7 @@ import infoReducer from '../../store/reducer';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-const url = 'https://localhost:8443';
+const url = 'https://alcotinder.herokuapp.com';
 
 const initialState = {
   login: '',

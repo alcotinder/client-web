@@ -10,7 +10,7 @@ import UserContext from '../../store/dispatch';
 
 import connect from '../../helpers/socketHelper';
 
-import useStyles from './style';
+// import useStyles from './style';
 import {
   Avatar,
   Button,
@@ -23,6 +23,37 @@ import {
 } from '@material-ui/core';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(25),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(2),
+  },
+  submit: {
+    marginTop: theme.spacing(1),
+  },
+  textField: {
+    marginTop: theme.spacing(1),
+  },
+}));
+
 
 const SignIn = () => {
 

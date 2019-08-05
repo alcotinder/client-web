@@ -6,7 +6,30 @@ import { getFromStorage } from '../../utils/storage';
 import { fetchData } from '../../services/user.service';
 import UserContext from '../../store/dispatch';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles({
+  card: {
+    maxWidth: 300,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+});
+
+// import {
+//   Container,
+//   Grid,
+// } from '@material-ui/core';
+
 const Profile = () => {
+  const classes = useStyles();
   const { state, dispatch } = useContext(UserContext);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -40,17 +63,57 @@ const Profile = () => {
   if (redirect) return <Redirect to='/signin'/>;
 
   if (isLoading) return <div> Loading... </div>;
+  console.log(state);
   return (
-    <div>
-      { error ? error : null }
+  // <div>
+  //   { error ? error : null }
 
-      <h1>{state.login}</h1>
-      <img alt='' src={state.photo} width="200" height="200" />
-      <p><label>{state.name} {state.lastname}</label></p>
-      <p><label>City: {state.city}</label></p>
-      <p><label>Drinks: {state.drinks}</label></p>
-      <Link to='/addinfo'>Edit profile</Link>
-    </div>
+  //   <h1>{state.login}</h1>
+  //   <p><label>{state.name} {state.lastname}</label></p>
+  //   <p><label>City: {state.city}</label></p>
+  //   <p><label>Drinks: {state.drinks}</label></p>
+      
+  //   <Grid container spacing={3}>
+  //     <Grid item xs={12} sm={6}>
+  //       <img alt='' src={state.photo} width="200" height="200" />
+  //       <Link to='/addinfo'>Edit profile</Link>
+  //     </Grid>
+  //     <Grid item xs={12} sm={6}>
+  //       ываываываываыDSFSDFSDFва
+  //     </Grid>
+  //   </Grid>
+  // </div>
+
+    <Card className={classes.card}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          alt="Contemplative Reptile"
+          height="250"
+          image={state.photo}
+          title="Contemplative Reptile"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2">
+            {state.login}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+          across all continents except Antarctica
+          </Typography>
+          <Typography gutterBottom variant="h5" component="p">
+            <label>{state.name} {state.lastname}</label>
+            <label>City: {state.city}</label>
+            <label>Drinks: {state.drinks}</label>
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <Button size="small" color="primary">
+          <Link to='/addinfo'>Edit profile</Link>
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 

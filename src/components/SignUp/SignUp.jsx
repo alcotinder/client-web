@@ -59,7 +59,7 @@ const SignUp = () => {
           {error}
         </Collapse>
         <form className={classes.form} noValidate>
-          <Grid spacing={0}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 label='Login'
