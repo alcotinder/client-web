@@ -23,11 +23,6 @@ const useStyles = makeStyles({
   },
 });
 
-// import {
-//   Container,
-//   Grid,
-// } from '@material-ui/core';
-
 const Profile = () => {
   const classes = useStyles();
   const { state, dispatch } = useContext(UserContext);
@@ -63,27 +58,7 @@ const Profile = () => {
   if (redirect) return <Redirect to='/signin'/>;
 
   if (isLoading) return <div> Loading... </div>;
-  console.log(state);
   return (
-  // <div>
-  //   { error ? error : null }
-
-  //   <h1>{state.login}</h1>
-  //   <p><label>{state.name} {state.lastname}</label></p>
-  //   <p><label>City: {state.city}</label></p>
-  //   <p><label>Drinks: {state.drinks}</label></p>
-      
-  //   <Grid container spacing={3}>
-  //     <Grid item xs={12} sm={6}>
-  //       <img alt='' src={state.photo} width="200" height="200" />
-  //       <Link to='/addinfo'>Edit profile</Link>
-  //     </Grid>
-  //     <Grid item xs={12} sm={6}>
-  //       ываываываываыDSFSDFSDFва
-  //     </Grid>
-  //   </Grid>
-  // </div>
-
     <Card className={classes.card}>
       <CardActionArea>
         <CardMedia
@@ -95,17 +70,18 @@ const Profile = () => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {state.login}
+            My login: {state.login}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-          across all continents except Antarctica
+            {/* {state.about} */}
           </Typography>
-          <Typography gutterBottom variant="h5" component="p">
-            <label>{state.name} {state.lastname}</label>
-            <label>City: {state.city}</label>
-            <label>Drinks: {state.drinks}</label>
-          </Typography>
+          {state.name &&
+            <Typography gutterBottom variant="h5" component="p">
+              <p><label>{state.name} {state.lastname}</label></p>
+              <p><label>City: {state.city}</label></p>
+              <p><label>Drinks: {state.drinks}</label></p>
+            </Typography>
+          }
         </CardContent>
       </CardActionArea>
       <CardActions>
